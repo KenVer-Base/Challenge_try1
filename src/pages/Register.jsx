@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import Button from '../components/Button';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
   const navigate = useNavigate();
 
-  const [role, setRole] = useState("Tenant");
-
+  // 1. STATE: Menampung inputan
   const [formData, setFormData] = useState({
-    fullname: "",
-    email: "",
-    password: ""
+    email: '',
+    password: '',
+    confirmPassword: ''
   });
 
   const handleChange = (e) => {
@@ -20,139 +18,97 @@ const Register = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleRegister = (e) => {
     e.preventDefault();
 
-    const params = new URLSearchParams();
-    params.append("fullname", formData.fullname);
-    params.append("email", formData.email);
-    params.append("password", formData.password);
-    params.append("role", role);
-
-    try {
-      const response = await fetch(
-        "https://ush-frontend-challenge.onrender.com/api/v1/register",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: params.toString()
-        }
-      );
-
-      const data = await response.json().catch(() => ({}));
-
-      if (response.ok && data?.status !== false) {
-        alert("Registrasi berhasil! Silakan login.");
-        navigate("/login");
-        return;
-      }
-
-      alert(data?.message || "Gagal register. Coba lagi.");
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Terjadi kesalahan server.");
+    // 2. VALIDASI: Cek apakah password dan confirm password sama
+    if (formData.password !== formData.confirmPassword) {
+      alert("Password dan Confirm Password tidak cocok!");
+      return;
     }
+
+    if (formData.password.length < 6) {
+      alert("Password minimal 6 karakter!");
+      return;
+    }
+
+    // 3. SIMPAN DATA (KUNCI UTAMA DISINI)
+    // Kita simpan object user agar bisa dibaca di halaman Login nanti
+    const userData = {
+      email: formData.email,
+      password: formData.password
+    };
+
+    // 'userDB' harus SAMA PERSIS dengan yang dipanggil di Login.jsx
+    localStorage.setItem('userDB', JSON.stringify(userData));
+
+    // Cek di console browser untuk memastikan data tersimpan
+    console.log("Data tersimpan:", userData);
+
+    alert("Registrasi Berhasil! Silakan Login.");
+    navigate('/login'); // Pindah ke halaman login
   };
 
   return (
-    <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 font-sans">
-      
-      {/* Left Banner */}
-      <div className="hidden md:flex bg-slate-900 text-white items-center justify-center p-10 relative overflow-hidden">
-        <div className="relative z-10 text-center max-w-md">
-          <h2 className="text-5xl font-black mb-4 tracking-tight">Join Rentverse</h2>
-          <p className="text-slate-400 text-lg">
-            Create functional spaces inspiring joy and connection.
-          </p>
-        </div>
-
-        <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500 rounded-full mix-blend-overlay filter blur-3xl opacity-10"></div>
-      </div>
-
-      {/* Right Form */}
-      <div className="flex items-center justify-center p-8 bg-white">
-        <div className="w-full max-w-md">
-          <h2 className="text-3xl font-black text-slate-900 mb-2">Register Now</h2>
-          <p className="text-slate-500 mb-8">Create your account to start journey.</p>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            
-            {/* Role Selector */}
-            <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2 ml-1">
-                I am a...
-              </label>
-              <div className="flex gap-4">
-                {["Tenant", "Property Owner"].map((r) => (
-                  <button
-                    key={r}
-                    type="button"
-                    onClick={() => setRole(r)}
-                    className={`flex-1 py-4 rounded-2xl font-bold border-2 transition-all duration-200
-                      ${
-                        role === r
-                          ? "border-orange-500 bg-orange-50 text-orange-600"
-                          : "border-transparent bg-gray-50 text-slate-400 hover:bg-gray-100"
-                      }`}
-                  >
-                    {r}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Full Name */}
-            <input
-              type="text"
-              name="fullname"
-              required
-              placeholder="Full Name"
-              className="w-full p-4 bg-gray-50 border-2 border-transparent 
-              focus:bg-white focus:border-orange-500 rounded-2xl 
-              outline-none transition-all font-medium placeholder-slate-400"
-              onChange={handleChange}
-            />
-
-            {/* Email */}
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="max-w-md w-full p-6 bg-white rounded-lg shadow-md">
+        <h2 className="text-2xl font-bold mb-6 text-center">Register Now</h2>
+        
+        <form onSubmit={handleRegister} className="flex flex-col gap-4">
+          
+          {/* Input Email */}
+          <div className="flex flex-col">
+            <label className="font-medium mb-1">Email</label>
             <input
               type="email"
               name="email"
-              required
-              placeholder="Email Address"
-              className="w-full p-4 bg-gray-50 border-2 border-transparent 
-              focus:bg-white focus:border-orange-500 rounded-2xl 
-              outline-none transition-all font-medium placeholder-slate-400"
+              value={formData.email}
               onChange={handleChange}
+              placeholder="Masukkan email..."
+              className="border p-3 rounded-lg bg-[#FFF8E7]"
+              required
             />
+          </div>
 
-            {/* Password */}
+          {/* Input Password */}
+          <div className="flex flex-col">
+            <label className="font-medium mb-1">Password</label>
             <input
               type="password"
               name="password"
-              required
-              placeholder="Password"
-              className="w-full p-4 bg-gray-50 border-2 border-transparent 
-              focus:bg-white focus:border-orange-500 rounded-2xl 
-              outline-none transition-all font-medium placeholder-slate-400"
+              value={formData.password}
               onChange={handleChange}
+              placeholder="Masukkan password..."
+              className="border p-3 rounded-lg bg-[#FFF8E7]"
+              required
             />
+          </div>
 
-            <Button 
-              type="submit"
-              variant="primary"
-              className="w-full py-4 mt-4 text-lg shadow-xl shadow-orange-500/20"
-            >
-              Register Account
-            </Button>
-          </form>
+          {/* Input Confirm Password */}
+          <div className="flex flex-col">
+            <label className="font-medium mb-1">Confirm Password</label>
+            <input
+              type="password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              placeholder="Ulangi password..."
+              className="border p-3 rounded-lg bg-[#FFF8E7]"
+              required
+            />
+          </div>
 
-          <p className="mt-6 text-center text-slate-500 text-sm">
-            Already have an account?{" "}
-            <Link to="/login" className="text-orange-500 font-bold hover:underline">
-              Login
-            </Link>
-          </p>
-        </div>
+          <button
+            type="submit"
+            className="mt-4 bg-orange-400 text-white font-bold py-3 rounded-lg hover:bg-orange-500 transition duration-300"
+          >
+            Register
+          </button>
+        </form>
+
+        <p className="mt-4 text-center text-sm text-gray-600">
+          Already have a Rentverse account? <a href="/login" className="text-orange-500 font-bold">Sign in</a>
+        </p>
       </div>
     </div>
   );

@@ -7,19 +7,6 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 
 
-const ProtectedRoute = ({ children }) => {
-    const isAuthenticated = localStorage.getItem('isLoggedIn') === 'true';
-
-    // Jika tidak terotentikasi, redirect ke halaman login
-    // if (!isAuthenticated) {
-    //     // Tampilkan peringatan (opsional)
-    //     alert("Anda harus login untuk mengakses halaman ini!"); 
-    //     return <Navigate to="/login" replace />;
-    // }
-
-    // Jika terotentikasi, tampilkan children (halaman Dashboard)
-    return children;
-};
 
 // Komponen yang Mengelola State Login dan Layout
 const AppLayout = ({ children, isLoggedIn, setIsLoggedIn }) => {

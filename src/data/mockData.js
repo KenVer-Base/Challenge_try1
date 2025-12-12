@@ -1,10 +1,10 @@
-// src/data/mockData.js
+
 export const properties = [
   {
     id: 1,
-    title: "Luxury Villa Bali",
+    title: "Hotel Bali",
     location: "Ubud, Bali",
-    price: 5000000000,
+    price: 500000,
     bedrooms: 4,
     bathrooms: 3,
     area: "500m²",

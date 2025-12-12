@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-// Hapus import yang tidak terpakai atau tidak terdefinisi (seperti useAuth)
-// import { useAuth } from "../context/AuthContext"; 
 
 const Login = () => {
   const navigate = useNavigate();

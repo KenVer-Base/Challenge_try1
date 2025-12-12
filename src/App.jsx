@@ -6,19 +6,16 @@ import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import Register from './pages/Register';
 
-// --- LOGIKA AUTHENTIKASI LOKAL (PENGGANTI useAuth) ---
 
-// Komponen Pembungkus untuk proteksi route
 const ProtectedRoute = ({ children }) => {
-    // Cek status login dari Local Storage
     const isAuthenticated = localStorage.getItem('isLoggedIn') === 'true';
 
     // Jika tidak terotentikasi, redirect ke halaman login
-    if (!isAuthenticated) {
-        // Tampilkan peringatan (opsional)
-        alert("Anda harus login untuk mengakses halaman ini!"); 
-        return <Navigate to="/login" replace />;
-    }
+    // if (!isAuthenticated) {
+    //     // Tampilkan peringatan (opsional)
+    //     alert("Anda harus login untuk mengakses halaman ini!"); 
+    //     return <Navigate to="/login" replace />;
+    // }
 
     // Jika terotentikasi, tampilkan children (halaman Dashboard)
     return children;
